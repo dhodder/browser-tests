@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>element.classList IDL attribute</title>
+<script src="../../../resources/testharness.js"></script>
+<script src="../../../resources/testharnessreport.js"></script>
+</head>
+<body id="bod" class="a B c d">
+<div id="log"></div>
+<script>
+// Ensure 'element.classList' exists:
+test(function () {
+    var testDiv = document.createElement("div");
+    assert_true( !! testDiv.classList, 'div element has no classList attribute');
+    assert_equals(testDiv.classList.toString(), '', 'classList attribute is not empty');
+    testDiv.className = "foo bar baz";
+    assert_equals(testDiv.classList.toString(), testDiv.className, 'classList attribute does not match className element');
+}, "Ensure 'element.classList' exists");
+
+// Test 'element.className.contains()':
+test(function () {
+    var testDiv = document.createElement("div");
+    assert_false(testDiv.classList.contains('sing'), "classList doesn't contain 'sing'");
+    testDiv.className = "sing";
+    assert_true(testDiv.classList.contains('sing'), "classList contains 'sing'");
+    assert_false(testDiv.classList.contains('while'), "classList doesn't contain 'while'");
+    testDiv.className = "sing while you may";
+    assert_true(testDiv.classList.contains('sing'), "classList contains 'sing'");
+    assert_true(testDiv.classList.contains('while'), "classList contains 'while'");
+    assert_true(testDiv.classList.contains('you'), "classList contains 'you'");
+    assert_true(testDiv.classList.contains('may'), "classList contains 'may'");
+}, "element.className.contains()");
+
+// Test 'element.className.contains()' with extra white space:
+test(function () {
+    var testDiv = document.createElement("div");
+    testDiv.className = " a b  c   d\te\tf\ng\nh\n\n";
+    assert_true(testDiv.classList.contains('a'), "classList contains 'a'");
+    assert_true(testDiv.classList.contains('b'), "classList contains 'b'");
+    assert_true(testDiv.classList.contains('c'), "classList contains 'c'");
+    assert_true(testDiv.classList.contains('d'), "classList contains 'd'");
+    assert_true(testDiv.classList.contains('e'), "classList contains 'e'");
+    assert_true(testDiv.classList.contains('f'), "classList contains 'f'");
+    assert_true(testDiv.classList.contains('g'), "classList contains 'g'");
+    assert_true(testDiv.classList.contains('h'), "classList contains 'h'");
+}, "element.className.contains() with extra white space");
+
+// Test 'element.className.add()':
+test(function () {
+    var testDiv = document.createElement("div");
+    assert_true( !! testDiv.classList.add, "classList supports '.add()'");
+    testDiv.classList.add("not");
+    assert_array_equals(testDiv.classList, ['not'], "classList should contain 'not'");
+    testDiv.classList.add("with");
+    testDiv.classList.add("a");
+    testDiv.classList.add("bang");
+    assert_array_equals(testDiv.classList, ['not', 'with', 'a', 'bang'], "classList should be ['not', 'with', 'a', 'bang']");
+    testDiv.classList.add("bang");
+    assert_array_equals(testDiv.classList, ['not', 'with', 'a', 'bang'], "classList should still be ['not', 'with', 'a', 'bang']");
+}, "element.className.add()");
+
+// Test 'element.className.add()' with extra white space:
+test(function () {
+    var testDiv = document.createElement("div");
+    testDiv.className = " a b  c   d\te\tf\ng\nh\n\n";
+    testDiv.classList.add("i");
+    assert_array_equals(testDiv.classList, ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'], "classList should be ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']");
+    testDiv.classList.add("a");
+    testDiv.classList.add("b");
+    testDiv.classList.add("c");
+    testDiv.classList.add("d");
+    testDiv.classList.add("e");
+    testDiv.classList.add("f");
+    testDiv.classList.add("g");
+    testDiv.classList.add("h");
+    testDiv.classList.add("i");
+    assert_array_equals(testDiv.classList, ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'], "classList should still be ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']");
+}, "element.className.add() with extra white space");
+
+// Test 'element.className.remove()':
+test(function () {
+    var testDiv = document.createElement("div");
+    assert_true( !! testDiv.classList.remove, "classList supports '.remove()'");
+    testDiv.classList.remove("nonExistantClass");
+    assert_array_equals(testDiv.classList, [], "classList shouldn't contain anything");
+    testDiv.className = 'this is the day';
+    testDiv.classList.remove("day");
+    assert_array_equals(testDiv.classList, ['this', 'is', 'the'], "classList shouldn't contain 'day'");
+    testDiv.classList.remove("is");
+    assert_array_equals(testDiv.classList, ['this', 'the'], "classList shouldn't contain 'is'");
+}, "element.className.remove()");
+
+// Test 'element.className.remove()' with extra white space:
+test(function () {
+    var testDiv = document.createElement("div");
+    testDiv.className = ' this\tis\tthe\nhour ';
+    testDiv.classList.remove("this");
+    testDiv.classList.remove("is");
+    testDiv.classList.remove("the");
+    testDiv.classList.remove("hour");
+    assert_array_equals(testDiv.classList, [], "classList shouldn't contain anything");
+}, "element.className.remove() with extra white space");
+
+// Test 'element.className.toggle()':
+test(function () {
+    var testDiv = document.createElement("div");
+    testDiv.className = 'am i';
+    assert_true( !! testDiv.classList.toggle, "classList supports '.toggle()'");
+    testDiv.classList.toggle("wrong");
+    assert_array_equals(testDiv.classList, ['am', 'i', 'wrong'], "classList array should contain 'wrong'");
+    testDiv.classList.toggle("wrong");
+    assert_array_equals(testDiv.classList, ['am', 'i', ], "classList shouldn't contain 'wrong'");
+}, "element.className.toggle()");
+
+// Test 'element.className.toggle()' with extra white space:
+test(function () {
+    var testDiv = document.createElement("div");
+    testDiv.className = '\n\nam\ni\nso\twrong\t\t';
+    testDiv.classList.toggle("so");
+    assert_array_equals(testDiv.classList, ['am', 'i', 'wrong'], "classList array should contain 'so'");
+    testDiv.classList.toggle("so");
+    assert_array_equals(testDiv.classList, ['am', 'i', 'wrong', 'so'], "classList array should contain 'so' again");
+    testDiv.classList.toggle("am");
+    testDiv.classList.toggle("i");
+    testDiv.classList.toggle("so");
+    testDiv.classList.toggle("wrong");
+    assert_array_equals(testDiv.classList, [], "classList shouldn't contain anything");
+}, "element.className.toggle() with extra white space");
+
+test(function () {
+    var bodyElement = document.getElementById('bod');
+    // Ensure 'element.classList' exists:
+    assert_true( !! bodyElement.classList, 'body element has classList attribute');
+    assert_equals(bodyElement.classList.toString(), bodyElement.className, 'classList attribute does not match className element');
+    // Test 'element.className.contains()':
+    assert_true( !! bodyElement.classList.contains, "classList supports '.contains()'");
+    assert_true(bodyElement.classList.contains('d'), "classList contains 'd'");
+    assert_false(bodyElement.classList.contains('F'), "classList doesn't contain 'F'");
+    // Test 'element.className.add':
+    assert_true( !! bodyElement.classList.add, "classList supports '.add()'");
+    bodyElement.classList.add("newclass");
+    assert_array_equals(bodyElement.classList, ['a', 'B', 'c', 'd', 'newclass'], "classList should now contain 'newclass'");
+    // Test 'element.className.remove()':
+    assert_true( !! bodyElement.classList.remove, "classList supports '.remove()'");
+    bodyElement.classList.remove("c");
+    assert_array_equals(bodyElement.classList, ['a', 'B', 'd', 'newclass'], "classList shouldn't contain 'c'");
+    // Test 'element.className.toggle()':
+    assert_true( !! bodyElement.classList.toggle, "classList supports '.toggle()'");
+    bodyElement.classList.toggle("c");
+    assert_array_equals(bodyElement.classList, ['a', 'B', 'd', 'newclass', 'c'], "classList array should contain 'c'");
+    bodyElement.classList.toggle("c");
+    assert_array_equals(bodyElement.classList, ['a', 'B', 'd', 'newclass', ], "classList shouldn't contain 'c'");
+}, "body.className");
+</script>
+</body>
+</html>

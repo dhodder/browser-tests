@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>hidden attribute</title>
+<script src="../../../resources/testharness.js"></script>
+<script src="../../../resources/testharnessreport.js"></script>
+</head>
+<body>
+<div id=shouldBeHidden>
+<p style="color: #F33; background: #CCC; font-size: 30px">This text should be hidden!
+</div>
+<div id=shouldNotBeVisible hidden>
+<p style="color: #F3F; background: #333; font-size: 30px">This text should not be visible!
+</div>
+<div id="log"></div>
+<script>
+test(function () {
+    var testDiv = document.getElementById("shouldBeHidden");
+    assert_false(testDiv.hidden, "'hidden' attribute returns false");
+    testDiv.hidden = true; // Hide 'shouldBeHidden' element
+    assert_true(testDiv.hidden, "'hidden' attribute returns true");
+    testDiv.hidden = false;
+    assert_false(testDiv.hidden, "'hidden' attribute returns false again");
+    testDiv.hidden = true;
+    assert_true(testDiv.hidden, "'hidden' attribute returns true again");
+}, "Ensure 'hidden' attribute returns true and false");
+
+test(function () {
+    var testDiv = document.getElementById("shouldNotBeVisible");
+    assert_true(testDiv.hidden, "'hidden' attribute returns true");
+}, "Ensure element marked-up as 'hidden' is hidden");
+</script>
+</body>
+</html>

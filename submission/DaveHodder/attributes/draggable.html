@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>draggable attribute</title>
+<script src="../../../resources/testharness.js"></script>
+<script src="../../../resources/testharnessreport.js"></script>
+</head>
+<body>
+<div id="log"></div>
+<script>
+test(function () {
+    var testDiv = document.createElement("div");
+    assert_true(typeof testDiv.draggable === 'boolean', 'draggable attribute is a boolean value');
+}, "Ensure 'draggable' attribute defaults to a boolean value");
+
+test(function () {
+    var testDiv = document.createElement("div");
+    testDiv.draggable = true;
+    assert_equals(testDiv.draggable, true, 'draggable attribute is true');
+}, "Ensure 'draggable' attribute can be set to true");
+
+test(function () {
+    var testDiv = document.createElement("div");
+    testDiv.draggable = false;
+    assert_equals(testDiv.draggable, false, 'draggable attribute is false');
+}, "Ensure 'draggable' attribute can be set to false");
+</script>
+</body>
+</html>
